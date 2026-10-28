@@ -1,2 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
 @use "tailwindcss";
+
+/* Ancho de la barra vertical */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Hace que el fondo (la pista blanca) sea totalmente invisible */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Estiliza la barra "agarradera" con un gris oscuro y bordes redondeados */
+::-webkit-scrollbar-thumb {
+    background-color: #334155; /* Equivale a bg-slate-700 en Tailwind */
+    border-radius: 10px;
+}
+
+/* Cambia ligeramente el color al pasar el cursor */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #475569; /* Equivale a bg-slate-600 */
+}

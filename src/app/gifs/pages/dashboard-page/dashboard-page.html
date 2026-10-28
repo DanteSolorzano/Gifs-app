@@ -1,15 +1,42 @@
-<!-- <router-outlet>
-  
-</router-outlet> -->
+<div class="bg-slate-100 w-screen h-screen antialiased flex overflow-hidden text-slate-800 selection:bg-blue-600 selection:text-white">
 
-<div class="bg-slate-100 overflow-hidden w-screen h-screen antialiased text-slate-300 selection:bg-blue-600 selection:text-white">
-    <div class="flex flex-col relative w-screen">
-         
-         <gifs-side-menu></gifs-side-menu>   
+    <!-- 1. CAPA OSCURA (Backdrop) PARA MÓVILES -->
+    @if (isMenuOpen()) {
+        <div class="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-sm transition-opacity"
+             (click)="toggleMenu()"></div>
+    }
 
-        <div class="ml-[220px] px-4 flex flex-col flex-1 h-full text-slate-800">
-            <router-outlet></router-outlet>
+    <!-- 2. MENÚ LATERAL RESPONSIVO -->
+    <!-- 
+      - fixed en celular, static en desktop (md:static)
+      - En celular usa el Signal (-translate-x-full o translate-x-0)
+      - En desktop SIEMPRE fuerza translate-x-0 (md:translate-x-0)
+    -->
+    <div class="fixed md:static inset-y-0 left-0 z-50 w-72 h-full bg-slate-900 transition-transform duration-300 ease-in-out transform shadow-2xl md:shadow-none md:translate-x-0 {{ isMenuOpen() ? 'translate-x-0' : '-translate-x-full' }}">
+        
+        <gifs-side-menu class="w-full h-full block"></gifs-side-menu>
+    </div>
+
+    <!-- 3. CONTENIDO PRINCIPAL -->
+    <div class="flex flex-col flex-1 h-full overflow-hidden relative">
+
+        <!-- HEADER MÓVIL (Solo visible en pantallas pequeñas) -->
+        <div class="md:hidden flex items-center justify-between p-4 bg-slate-900 text-white shadow-md z-30">
+            
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-blue-500"></i>
+                <h1 class="text-xl font-bold">GifsApp</h1>
+            </div>
+
+            <button (click)="toggleMenu()" class="p-2 focus:outline-none hover:bg-white/10 rounded-md transition-colors">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
         </div>
+
+        <!-- ÁREA DE PÁGINAS -->
+        <main class="flex-1 h-full overflow-hidden bg-slate-100">
+            <router-outlet></router-outlet>
+        </main>
 
     </div>
 </div>
