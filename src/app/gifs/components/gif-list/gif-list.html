@@ -1,9 +1,32 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-
-    @for (gif of gifs(); track gif){
-
-        <gif-list-item [imageUrl]="gif.url"></gif-list-item>
+<!-- Cambiamos grid por el sistema nativo de columnas de CSS -->
+<div class="columns-2 md:columns-4 gap-4">
+    
+    <!-- Iteramos directamente sobre el arreglo plano original -->
+    @for (gif of gifs(); track gif.id) {
         
-    }
+        <!-- break-inside-avoid asegura que el GIF no se parta. mb-4 da el espaciado vertical -->
+        <div class="relative group overflow-hidden rounded-lg cursor-pointer bg-slate-800 break-inside-avoid mb-4">
+            
+             <img class="w-full h-auto rounded-lg transition-transform duration-300 group-hover:scale-105" 
+                  [src]="gif.url" 
+                  [alt]="gif.title">
+             
+             <!-- Capa oscura de microinteracción (sin cambios) -->
+             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <div class="flex justify-between items-center">
+                    <p class="text-white font-bold text-sm truncate mr-2">{{ gif.title || 'GIF sin título' }}</p>
+                    
+                    <button (click)="copyToClipboard(gif.url, gif.id)" 
+                            class="text-white/70 hover:text-white transition-colors p-2 bg-white/10 rounded-full backdrop-blur-sm hover:bg-white/20 w-8 h-8 flex items-center justify-center">
+                        @if (copiedGifId() === gif.id) {
+                            <i class="fa-solid fa-check text-green-400"></i>
+                        } @else {
+                            <i class="fa-regular fa-copy"></i>
+                        }
+                    </button>
+                </div>
+             </div>
 
+         </div>
+    }
 </div>

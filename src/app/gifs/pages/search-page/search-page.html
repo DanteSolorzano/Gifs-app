@@ -1,15 +1,56 @@
-<h2 class="text-2xl font-bold mt-5">Buscar Gifs</h2>
-<h3 class="text-sm text-gray-500">Buscar gifs por nombre, descripcion o tags</h3>
+<!-- Envolvemos todo en el contenedor scrolleable -->
+<div class="h-screen overflow-y-scroll px-4 pt-4 pb-20"
+    (scroll)="onScroll($event)"
+    #groupDiv
+>
+    <h2 class="text-2xl font-bold mt-5">Buscar Gifs</h2>
+    <h3 class="text-sm text-gray-500">Buscar gifs por nombre, descripcion o tags</h3>
 
-<section class="flex flex-col gap-4">
-    <input type="text"
-    placeholder="Buscar Gifs"
-    class="mt-3 border border-gray-300 rounded-md p-2"
-    (keyup.enter)="onSearch(txtSearch.value)"
-    #txtSearch
-    >
-</section>
+    <section class="flex flex-col gap-4">
+        <input type="text"
+        placeholder="Buscar Gifs"
+        class="mt-3 border border-gray-300 rounded-md p-2 text-slate-800"
+        (keyup.enter)="onSearch(txtSearch.value)"
+        #txtSearch
+        >
+    </section>
 
-<section class="py-5">
-    <gif-list [gifs]="gifs()"/>
-</section>
+    <section class="py-5">
+        
+        @if (currentQuery === '') {
+            <div class="flex flex-col items-center justify-center mt-20 text-slate-400">
+                <i class="fa-solid fa-magnifying-glass text-6xl mb-4 opacity-50 hover:scale-110 transition-transform"></i>
+                <h3 class="text-2xl font-bold text-slate-500">¡Encuentra tu GIF favorito!</h3>
+                <p>Escribe una palabra clave arriba y presiona Enter.</p>
+            </div>
+        } 
+        @else if (gifs().length === 0 && !isLoading) {
+            <div class="flex flex-col items-center justify-center mt-20 text-slate-400">
+                <i class="fa-solid fa-ghost text-6xl mb-4 opacity-50 animate-bounce"></i>
+                <h3 class="text-2xl font-bold text-slate-500">No encontramos resultados</h3>
+                <p>No hay GIFs para la búsqueda "{{ currentQuery }}".</p>
+            </div>
+        } 
+        @else {
+            <!-- 1. Los GIFs reales -->
+            <gif-list [gifs]="gifs()"></gif-list>
+
+            <!-- 2. Skeletons: Aparecen solo mientras isLoading es true -->
+            @if (isLoading) {
+                <!-- Usamos la misma estructura Masonry de columnas -->
+                <div class="columns-2 md:columns-4 gap-4 mt-4">
+                    <!-- Cajas con alturas variables para simular el Masonry -->
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-64 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-48 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-72 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-32 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-80 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-56 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-64 w-full"></div>
+                    <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-40 w-full"></div>
+                </div>
+            }
+        }
+
+    </section>
+</div>

@@ -6,7 +6,7 @@ import { ScrollStateService } from '../../../shared/services/scroll-state.servic
 
 @Component({
   selector: 'app-trending-page',
-  imports: [RouterOutlet, GifList],
+  imports: [ GifList],
   templateUrl: "./trending-page.html",
   styleUrl: './trending-page.css',
 })

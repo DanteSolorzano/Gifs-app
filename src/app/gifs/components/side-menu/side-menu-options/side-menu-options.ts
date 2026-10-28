@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { GifService } from '../../../services/gifs.service';
 
 interface MenuOption {
@@ -17,7 +17,8 @@ interface MenuOption {
 })
 export class SideMenuOptions {
 
-  gifService = inject(GifService)
+  gifService = inject(GifService);
+  router = inject(Router); 
 
   menuOptions:MenuOption[] = [
     {
@@ -34,5 +35,17 @@ export class SideMenuOptions {
     }
   ];
 
+  deleteHistoryItem(key: string) {
+    // 1. Borrar el elemento del servicio
+    this.gifService.removeHistory(key);
+
+    // 2. Comprobar si la URL actual es la misma del historial que acabamos de borrar
+    const currentUrl = this.router.url;
+    const deletedUrl = `/dashboard/history/${key}`;
+
+    if (currentUrl === deletedUrl) {
+      this.router.navigate(['/dashboard/trending']);
+    }
+  }
 
 }

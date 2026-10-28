@@ -1,18 +1,22 @@
-<div class="h-screen overflow-y-scroll grid grid-cols-2 md:grid-cols-4 gap-4"
+<!-- Manejar el scroll infinito -->
+<div class="h-screen overflow-y-scroll pt-4 pb-20"
     (scroll)="onScroll($event)"
     #groupDiv
 >
+    <!-- Componente Masonry -->
+    <gif-list [gifs]="gifService.trendingGifs()"></gif-list>
 
-    @for (group of gifService.trendingGifGroup(); track $index){
-         <div class="grid gap-4">
-
-            @for (gif of group; track gif.id){
-                <!-- Quitamos el div extra y ajustamos las clases de la imagen -->
-                <div>
-                     <img class="h-full w-full rounded-lg object-cover" [src]="gif.url" [alt]="gif.title">
-                 </div>
-            }
-
-         </div>
+    <!-- Skeletons cargando más tendencias -->
+    @if (gifService.trendingGifsLoading()) {
+        <div class="columns-2 md:columns-4 gap-4 mt-4">
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-64 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-48 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-72 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-32 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-56 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-64 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-40 w-full"></div>
+            <div class="break-inside-avoid mb-4 rounded-lg bg-slate-800 animate-pulse h-48 w-full"></div>
+        </div>
     }
 </div>

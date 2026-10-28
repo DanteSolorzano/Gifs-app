@@ -72,31 +72,43 @@ export class GifService {
 
     }
 
-    searchGifs(query: string):Observable<Gif[]>{
+    searchGifs(query: string, page: number = 0): Observable<Gif[]> {
+        const queryKey = query.toLocaleLowerCase();
+
         return this.http.get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`, {
             params: {
                 api_key: environment.giphyApiKey,
                 limit: 20,
+                offset: page * 20,
                 q: query,  
             },
         }).pipe(
             map(({data}) => data),
             map((items) => GifMapper.mapGiphyItemsToGifArray(items)),
         
-            //historial
+            // Historial dinámico con validación de resultados vacíos
             tap(items => {
-                this.searchHistory.update( history => ({    
-                    ...history,
-                    [query.toLocaleLowerCase()]: items,
-                }));
+                // Si la API no devolvió nada, ignoramos el guardado y salimos
+                if (items.length === 0) return;
+
+                this.searchHistory.update( history => {    
+                    const existingGifs = page === 0 ? [] : (history[queryKey] ?? []);
+                    
+                    return {
+                        ...history,
+                        [queryKey]: [...existingGifs, ...items],
+                    }
+                });
             })
         );
-        
-        // .subscribe( (response) => {
-        //     const gifs = GifMapper.mapGiphyItemsToGifArray(response.data);
-        //     console.log({search: gifs})
-        // })
+    }
 
+    removeHistory(query: string) {
+        this.searchHistory.update( history => {
+            const updatedHistory = { ...history };
+            delete updatedHistory[query];
+            return updatedHistory;
+        });
     }
 
     getHistoryGifs( query: string):Gif[]{
